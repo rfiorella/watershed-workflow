@@ -503,7 +503,6 @@ def condition_river_mesh(m2,
                 node)  # if only centerline elevation is to be use, without any conditioning
 
         for i, elem in enumerate(node.elements):
-
             if i == 0:  # for the first point
                 m2.coords[elem[0]][2] = m2.coords[elem[-1]][2] = profile[i, 1]
 
@@ -520,6 +519,7 @@ def condition_river_mesh(m2,
                         if m2.coords[node_id][2] < min(profile[i + 1, 1], profile[i, 1]):
                             logging.info(f"raised node {node_id} for bank integrity")
                             m2.coords[node_id][2] = 0.5 * (profile[i, 1] + profile[i + 1, 1]) + 0.55
+    m2.clear_geometry_cache()
 
 
 def get_profile(node):

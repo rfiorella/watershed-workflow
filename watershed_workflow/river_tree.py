@@ -160,6 +160,8 @@ class River(watershed_workflow.tinytree.Tree):
         """
         logging.debug("Generating Rivers")
 
+        print('tol', tol)
+
         if len(reaches) == 0:
             return list()
 

@@ -747,7 +747,8 @@ def construct_rivers(hucs,
                      prune_by_area=None,
                      prune_by_area_fraction=None,
                      remove_diversions=False,
-                     remove_braided_divergences=False):
+                     remove_braided_divergences=False,
+                     tol = 0.1):
     """Create a river, which is a tree of reaches.
     
     Note, HUCs and rivers must be in the same crs.
@@ -798,7 +799,7 @@ def construct_rivers(hucs,
     logging.info("-" * 30)
 
     logging.info("Generating the river tree")
-    rivers = watershed_workflow.hydrography.make_global_tree(reaches, method=method)
+    rivers = watershed_workflow.hydrography.make_global_tree(reaches, method=method, tol=tol)
     logging.info(f" ... generated {len(rivers)} rivers")
 
     if ignore_small_rivers is not None:
