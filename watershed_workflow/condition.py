@@ -441,8 +441,7 @@ def condition_river_mesh(m2,
                          lower=False,
                          use_nhd_elev=False,
                          treat_banks=False,
-                         depress_by=0,
-                         crs=None, dem=None, dem_profile=None):
+                         depress_by=0):
     """Conditoning the elevations of stream-corridor elements (generally required in flat agricultural watersheds) to ensure connectivity throgh culverts, 
     skips ponds, maintaiin monotonicity, enforce depths of constructed channels
 
@@ -489,7 +488,7 @@ def condition_river_mesh(m2,
     if smooth:
         for node in river.preOrder():  # reachwise smoothing
             smooth_profile(node, use_parent=use_parent,
-                           lower=lower,crs=crs, dem=dem, dem_profile=dem_profile)  # adds smooth profile in node properties
+                           lower=lower)  # adds smooth profile in node properties
 
         network_sweep(river, depress_by=depress_by,
                       use_nhd_elev=use_nhd_elev)  # network-wide conditioning
@@ -501,13 +500,12 @@ def condition_river_mesh(m2,
             profile = node.properties["SmoothProfile"]
         else:
             profile = get_profile(
-                node, crs, dem, dem_profile)  # if only centerline elevation is to be use, without any conditioning
+                node)  # if only centerline elevation is to be use, without any conditioning
 
         for i, elem in enumerate(node.elements):
             if i == 0:  # for the first point
                 m2.coords[elem[0]][2] = m2.coords[elem[-1]][2] = profile[i, 1]
 
-            print("node.elements", len(node.elements), 'profile', len(profile))
             # assigning elevations to the upstream points of each river-corridor element (quads)
             for coord_id in elem[1:-1]:
                 m2.coords[coord_id][2] = profile[i + 1, 1]
@@ -524,28 +522,23 @@ def condition_river_mesh(m2,
     m2.clear_geometry_cache()
 
 
-def get_profile(node,crs, dem, dem_profile):
+def get_profile(node):
     """for a given node, generates a bedprofile using elevations on the node.segment"""
     stream_bed_coords = list(
         reversed(node.segment.coords)
     )  # node that node_elems are downstream to upstream, while segment coords are upstream to downstream
     dists = [math.dist(stream_bed_coords[0], point) for point in stream_bed_coords]
-    ## elevating river part ==== moved here because of some weirdness with properties
-    node_points=(np.array(node.segment.xy).T)
-    node_elevs = watershed_workflow.elevate(node_points, crs, dem, dem_profile)[:,2]
-    assert(len(node_elevs)==len(node.segment.coords))
-    ## ====
-    elevs = node_elevs[::-1]  # reversed
+    elevs = node.properties['elev_profile'][::-1]  # reversed
     profile = np.array([dists, elevs]).T
     return profile
 
 
-def smooth_profile(node, use_parent=False, lower=False, crs=None, dem=None, dem_profile=None):
+def smooth_profile(node, use_parent=False, lower=False):
     """applies gaussian filter smoothing to the bed-profile obtained from DEM. This option becomes important in ag. watersheds when NHDPLus
     is off the actually depression corresponding to narrow agricultural ditches on the DEM. One can also include elevation profile of the parent
     node for better continuity, although, subsequent network sweep option makes using parent profile redundant.
     """
-    profile = get_profile(node,crs, dem, dem_profile)
+    profile = get_profile(node)
     profile_new = copy.deepcopy(profile)
 
     if use_parent:
