@@ -20,6 +20,7 @@ PACKAGES_BASE=['python=3.10',
               'libarchive',
               'h5py',
               'netCDF4',
+              'libnetcdf<4.9',
               'pytest',
               'nbmake',
               ]
@@ -42,6 +43,7 @@ PACKAGES_EXTRAS_DEV=[
 PACKAGES_USER_BASE=['ipython',
                'jupyterlab',
                'ipykernel',
+               'notebook<7.0.0',
                'nb_conda',
                'nb_conda_kernels',
                'papermill',
@@ -148,8 +150,9 @@ def dump_env_local(env_type, os_name, env_name, env_filename=None, new_env_name=
 
 
     args = ['env', 'export',]
-    if PACKAGE_MANAGER == 'conda':
-        args.append('--no-builds')
+#    if PACKAGE_MANAGER == 'conda':
+#        args.append('--no-builds')
+    args.append('--no-builds')
 
     result = subprocess.run([PACKAGE_MANAGER,]+args+['--name',env_name],
                             check=True, capture_output=True)

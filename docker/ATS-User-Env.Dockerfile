@@ -7,8 +7,8 @@
 #
 # Stage 1 -- setup base CI environment
 #
-ARG DOCKER_TAG
-FROM ecoon/watershed_workflow:${DOCKER_TAG}
+ARG DOCKER_TAG=master
+FROM metsi/watershed_workflow:${DOCKER_TAG}
 LABEL Description="ATS layers on top of WW"
 
 ARG env_name=watershed_workflow

@@ -1,0 +1,24 @@
+# building multi-architecture versions of WW docker containers
+# rich fiorella, 231201
+
+# from rfiorella/ww-ats-geochem branch:
+
+1. generate 'fresh' environment yaml files:
+
+./environments/create_linux_envs.sh
+
+2. modify environments/environment-Linux.yml file to reflect the following:
+    - add anaconda to channels after conda forge (not all archs for _libgcc_mutex available on conda-forge)
+    - remove meshpy and scipy from 'main' package list
+    - add to bottom of package list:
+
+```
+- pip:
+    - meshpy
+    - scipy
+```
+
+3. Assuming buildx is set up, build containers:
+
+./docker/build_user_container.sh
+
