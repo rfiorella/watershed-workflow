@@ -3,6 +3,14 @@
 
 # from rfiorella/ww-ats-geochem branch:
 
+0. (if working on apple silicon, will need
+to specify --platform=linux/amd64 after FROM in 
+Create-Envs.dockerfile:
+
+FROM --platform=linux/amd64 condaforge/mambaforge:4.12.0-0
+
+)
+
 1. generate 'fresh' environment yaml files:
 
 ./environments/create_linux_envs.sh
