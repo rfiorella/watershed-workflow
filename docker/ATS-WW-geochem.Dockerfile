@@ -201,12 +201,14 @@ RUN cd /usr/local/bin \
     && wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/start-notebook.sh \
     && wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/start-singleuser.py \
     && wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/start-singleuser.sh \
-    && chown ${NB_UID}:${NB_GID} start-* \
+    && chown ${NB_UID}:${NB_GID} start* \
+    && chmod u+x start* \
     && mkdir /etc/jupyter \
     && cd /etc/jupyter/ \
     && wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/jupyter_server_config.py \
     && wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/docker_healthcheck.py \
-    && chown ${NB_UID}:${NB_GID} jupyter_server_config.py docker_healthcheck.py
+    && chown ${NB_UID}:${NB_GID} jupyter_server_config.py docker_healthcheck.py \
+    && chmod u+x jupyter_server_config.py docker_healthcheck.py
 #COPY start-notebook.py start-notebook.sh start-singleuser.py start-singleuser.sh /usr/local/bin/
 #COPY jupyter_server_config.py docker_healthcheck.py /etc/jupyter/
 
