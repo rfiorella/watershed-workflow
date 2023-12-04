@@ -1,5 +1,27 @@
 # building multi-architecture versions of WW docker containers
-# rich fiorella, 231201
+rich fiorella, 231201
+
+## updated 231203 - an alternate approach 
+
+trying to build ww on aarch64 ran into several issues with compiling
+exodus, primarily because the conda compilers provided aren't the same
+ones used to compile the packages - therefore, when going to link to 
+libnetcdf from conda, compiler throws an error.
+
+alternate approach is to compile everything in gcc/g++/gfortran, build
+on the ats image, and then link exodus to the copies of netcdf and hdf5
+in the amanzi/ats tpls. this dockerfile does that. Essentially this 
+dockerfile starts from the ATS build, then builds the jupyterlab stack
+from scratch, before finally building WW. it mimics the buildout of the 
+jupyter stack by:
+1) from ATS, [build docker-stacks-foundation](https://github.com/jupyter/docker-stacks/tree/main/images/docker-stacks-foundation)
+2) from 1, build: [base-notebook](https://github.com/jupyter/docker-stacks/tree/main/images/base-notebook)
+3) from 2, build: [minimal-notebook](https://github.com/jupyter/docker-stacks/tree/main/images/minimal-notebook)
+
+The end of step 3 gets us to the start of the existing WW build, but with ATS already compiled.
+From there, can follow steps 0-2 in below, then:
+
+docker buildx build --platform=linux/amd64,linux/arm64 --push -f docker/ATS-WW-geochem.Dockerfile -t <tag> .
 
 # from rfiorella/ww-ats-geochem branch:
 
