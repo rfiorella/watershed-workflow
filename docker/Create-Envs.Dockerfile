@@ -3,7 +3,7 @@
 #
 # To be used by WW maintainer only...
 
-FROM condaforge/mambaforge:4.12.0-0
+FROM --platform=linux/amd64 condaforge/mambaforge:4.12.0-0
 WORKDIR /ww
 COPY environments/create_envs.py /ww/create_envs.py
 RUN mkdir environments

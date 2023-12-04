@@ -2,9 +2,9 @@
 # your Anaconda environment's installation, but this is set by default
 # on conda activate.
 
-#CC=`which gcc`
-#CXX=`which g++`  # `which g++` for Linux
-#FC=`which gfortran`
+CC=`which mpicc`
+CXX=`which mpic++`  # `which g++` for Linux
+FC=`which mpifort`
 
 SEACAS_SRC_DIR=${SEACAS_DIR}/src/seacas
 
@@ -32,9 +32,9 @@ cmake \
     -D TPL_ENABLE_MPI=OFF \
     -D TPL_ENABLE_CGNS:BOOL=OFF \
     \
-    -D Netcdf_LIBRARY_DIRS:PATH=${CONDA_PREFIX}/lib \
-    -D Netcdf_INCLUDE_DIRS:PATH=${CONDA_PREFIX}/include \
-    -D HDF5_ROOT:PATH=${CONDA_PREFIX} \
+    -D Netcdf_LIBRARY_DIRS:PATH=/home/amanzi_user/install/tpls/lib \
+    -D Netcdf_INCLUDE_DIRS:PATH=/home/amanzi_user/install/tpls/include \
+    -D HDF5_ROOT:PATH=/home/amanzi_user/install/tpls \
     -D HDF5_NO_SYSTEM_PATHS=ON \
 ${SEACAS_SRC_DIR}
 
